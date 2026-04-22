@@ -13,12 +13,12 @@ const stripe = new Stripe(process.env.STRIPE_SECRET);
 
 // 🔥 TES PRIX STRIPE
 const PRICES = {
-  ESSENTIEL_YEAR: "price_xxx",
-  ESSENTIEL_MONTH: "price_xxx",
-  CONFORT_YEAR: "price_xxx",
-  CONFORT_MONTH: "price_xxx",
-  SERENITE_YEAR: "price_xxx",
-  SERENITE_MONTH: "price_xxx",
+  ESSENTIEL_YEAR: "price_1TOB7HJgCRDL7Cgv16QqokK5",
+  ESSENTIEL_MONTH: "price_1TNSOgJgCRDL7Cgv4AEkyrX3",
+  CONFORT_YEAR: "price_1TOB6HJgCRDL7CgvV114Q2kh",
+  CONFORT_MONTH: "price_1TNSPlJgCRDL7Cgvf211mea2",
+  SERENITE_YEAR: "price_1TOB5FJgCRDL7CgvH9Tmcb5f",
+  SERENITE_MONTH: "price_1TNSRHJgCRDL7CgvRGVIqOS7",
 };
 
 app.post("/api/checkout", async (req, res) => {
