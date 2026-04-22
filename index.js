@@ -24,7 +24,6 @@ const transporter = nodemailer.createTransport({
 });
   tls: {
     rejectUnauthorized: false,
-  },
 });
 async function sendInternalSubscriptionEmail({
   source,
