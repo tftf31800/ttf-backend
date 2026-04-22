@@ -11,7 +11,6 @@ app.use(express.json());
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// 🔥 TES PRIX STRIPE
 const PRICES = {
   ESSENTIEL_YEAR: "price_1TOB7HJgCRDL7Cgv16QqokK5",
   ESSENTIEL_MONTH: "price_1TNSOgJgCRDL7Cgv4AEkyrX3",
@@ -74,6 +73,10 @@ app.post("/api/checkout", async (req, res) => {
       error: error.message || "Erreur Stripe",
     });
   }
+});
+
+app.get("/api/health", (_req, res) => {
+  res.json({ ok: true });
 });
 
 const PORT = process.env.PORT || 3001;
