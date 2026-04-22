@@ -56,8 +56,8 @@ app.post("/api/checkout", async (req, res) => {
           quantity: 1,
         },
       ],
-      success_url: "https://souscrire.toutfeutoutflamme31.fr/success",
-      cancel_url: "https://souscrire.toutfeutoutflamme31.fr/cancel",
+      success_url: "https://souscrire.toutfeutoutflamme31.fr/?checkout=success",
+      cancel_url: "https://souscrire.toutfeutoutflamme31.fr/?checkout=cancel",
       metadata: {
         nom,
         telephone,
