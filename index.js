@@ -34,19 +34,34 @@ app.post("/api/checkout", async (req, res) => {
 
     let priceId;
 
-    if (offer === "ESSENTIEL" && billingType === "year") priceId = PRICES.ESSENTIEL_YEAR;
-    if (offer === "ESSENTIEL" && billingType === "month") priceId = PRICES.ESSENTIEL_MONTH;
-    if (offer === "CONFORT" && billingType === "year") priceId = PRICES.CONFORT_YEAR;
-    if (offer === "CONFORT" && billingType === "month") priceId = PRICES.CONFORT_MONTH;
-    if (offer === "SERENITE" && billingType === "year") priceId = PRICES.SERENITE_YEAR;
-    if (offer === "SERENITE" && billingType === "month") priceId = PRICES.SERENITE_MONTH;
+    if (offer === "ESSENTIEL" && billingType === "year") {
+      priceId = PRICES.ESSENTIEL_YEAR;
+    }
+    if (offer === "ESSENTIEL" && billingType === "month") {
+      priceId = PRICES.ESSENTIEL_MONTH;
+    }
+    if (offer === "CONFORT" && billingType === "year") {
+      priceId = PRICES.CONFORT_YEAR;
+    }
+    if (offer === "CONFORT" && billingType === "month") {
+      priceId = PRICES.CONFORT_MONTH;
+    }
+    if (offer === "SERENITE" && billingType === "year") {
+      priceId = PRICES.SERENITE_YEAR;
+    }
+    if (offer === "SERENITE" && billingType === "month") {
+      priceId = PRICES.SERENITE_MONTH;
+    }
 
     if (!priceId) {
       return res.status(400).json({ error: "Prix invalide" });
     }
 
+    const paymentMethods =
+      billingType === "month" ? ["sepa_debit"] : ["card"];
+
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card","sepa_debit"],
+      payment_method_types: paymentMethods,
       mode: "subscription",
       customer_email: email,
       line_items: [
@@ -55,14 +70,17 @@ app.post("/api/checkout", async (req, res) => {
           quantity: 1,
         },
       ],
-      success_url: "https://souscrire.toutfeutoutflamme31.fr/?checkout=success",
-      cancel_url: "https://souscrire.toutfeutoutflamme31.fr/?checkout=cancel",
+      success_url:
+        "https://souscrire.toutfeutoutflamme31.fr/?checkout=success",
+      cancel_url:
+        "https://souscrire.toutfeutoutflamme31.fr/?checkout=cancel",
       metadata: {
         nom,
         telephone,
         adresse,
         appareil,
         offre: offer,
+        billingType,
       },
     });
 
@@ -73,10 +91,6 @@ app.post("/api/checkout", async (req, res) => {
       error: error.message || "Erreur Stripe",
     });
   }
-});
-
-app.get("/api/health", (_req, res) => {
-  res.json({ ok: true });
 });
 
 const PORT = process.env.PORT || 3001;
