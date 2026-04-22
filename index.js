@@ -74,14 +74,18 @@ app.post("/api/checkout", async (req, res) => {
         "https://souscrire.toutfeutoutflamme31.fr/?checkout=success",
       cancel_url:
         "https://souscrire.toutfeutoutflamme31.fr/?checkout=cancel",
-      metadata: {
-        nom,
-        telephone,
-        adresse,
-        appareil,
-        offre: offer,
-        billingType,
-      },
+metadata: {
+  nom,
+  telephone,
+  adresse,
+  appareil,
+  email,
+  offre: offer,
+  billingType,
+  contractSigned: String(req.body.contractSigned === true),
+  cgvAccepted: String(req.body.cgvAccepted === true),
+  sepaAccepted: String(req.body.sepaAccepted === true),
+},
     });
 
     res.json({ url: session.url });
