@@ -93,6 +93,13 @@ const PRICES = {
 
 app.get("/api/test-mail", async (_req, res) => {
   try {
+    console.log("SMTP TEST", {
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  user: process.env.SMTP_USER,
+  from: process.env.MAIL_FROM,
+  to: process.env.MAIL_TO,
+});
     await transporter.sendMail({
       from: process.env.MAIL_FROM,
       to: process.env.MAIL_TO,
