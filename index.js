@@ -2,14 +2,82 @@ import express from "express";
 import Stripe from "stripe";
 import cors from "cors";
 import dotenv from "dotenv";
+import nodemailer from "nodemailer";
 
 dotenv.config();
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST || "smtp.ionos.com",
+  port: Number(process.env.SMTP_PORT || 465),
+  secure: Number(process.env.SMTP_PORT || 465) === 465,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
+
+async function sendInternalSubscriptionEmail({
+  source,
+  offre,
+  billingType,
+  nom,
+  telephone,
+  email,
+  adresse,
+  appareil,
+  contractSigned,
+  cgvAccepted,
+  sepaAccepted,
+  stripeCustomerId,
+  stripeSubscriptionId,
+  stripeSessionId,
+  paymentStatus,
+}) {
+  const isMonthly = billingType === "month";
+
+  const subject = isMonthly
+    ? `Nouvelle souscription mensuelle - ${offre}`
+    : `Nouvelle souscription annuelle - ${offre}`;
+
+  const text = `
+Nouvelle souscription reçue
+
+Source : ${source || ""}
+Offre : ${offre || ""}
+Type de facturation : ${isMonthly ? "Mensuel / SEPA" : "Annuel / Carte"}
+
+Nom : ${nom || ""}
+Téléphone : ${telephone || ""}
+Email : ${email || ""}
+Adresse : ${adresse || ""}
+Appareil : ${appareil || ""}
+
+Contrat accepté : ${contractSigned || ""}
+CGV acceptées : ${cgvAccepted || ""}
+Autorisation SEPA : ${sepaAccepted || ""}
+
+Stripe customer ID : ${stripeCustomerId || ""}
+Stripe subscription ID : ${stripeSubscriptionId || ""}
+Stripe session ID : ${stripeSessionId || ""}
+Statut paiement : ${paymentStatus || ""}
+
+Date : ${new Date().toLocaleString("fr-FR")}
+  `.trim();
+
+  await transporter.sendMail({
+    from: process.env.MAIL_FROM,
+    to: process.env.MAIL_TO,
+    subject,
+    text,
+  });
+}
 
 const PRICES = {
   ESSENTIEL_YEAR: "price_1TOB7HJgCRDL7Cgv16QqokK5",
@@ -19,6 +87,22 @@ const PRICES = {
   SERENITE_YEAR: "price_1TOB5FJgCRDL7CgvH9Tmcb5f",
   SERENITE_MONTH: "price_1TNSRHJgCRDL7CgvRGVIqOS7",
 };
+
+app.get("/api/test-mail", async (_req, res) => {
+  try {
+    await transporter.sendMail({
+      from: process.env.MAIL_FROM,
+      to: process.env.MAIL_TO,
+      subject: "Test mail IONOS",
+      text: "Test OK depuis le backend Render.",
+    });
+
+    res.json({ ok: true, message: "Mail envoyé" });
+  } catch (error) {
+    console.error("Erreur test mail :", error);
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
 
 app.post("/api/checkout", async (req, res) => {
   try {
@@ -30,6 +114,9 @@ app.post("/api/checkout", async (req, res) => {
       appareil,
       offer,
       billingType,
+      contractSigned,
+      cgvAccepted,
+      sepaAccepted,
     } = req.body;
 
     let priceId;
@@ -74,18 +161,18 @@ app.post("/api/checkout", async (req, res) => {
         "https://souscrire.toutfeutoutflamme31.fr/?checkout=success",
       cancel_url:
         "https://souscrire.toutfeutoutflamme31.fr/?checkout=cancel",
-metadata: {
-  nom,
-  telephone,
-  adresse,
-  appareil,
-  email,
-  offre: offer,
-  billingType,
-  contractSigned: String(req.body.contractSigned === true),
-  cgvAccepted: String(req.body.cgvAccepted === true),
-  sepaAccepted: String(req.body.sepaAccepted === true),
-},
+      metadata: {
+        nom,
+        telephone,
+        adresse,
+        appareil,
+        email,
+        offre: offer,
+        billingType,
+        contractSigned: String(contractSigned === true),
+        cgvAccepted: String(cgvAccepted === true),
+        sepaAccepted: String(sepaAccepted === true),
+      },
     });
 
     res.json({ url: session.url });
