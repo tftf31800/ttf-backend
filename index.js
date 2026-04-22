@@ -34,16 +34,16 @@ app.post("/api/checkout", async (req, res) => {
 
   let priceId;
 
-  if (offer === "ESSENTIEL" && billing === "year") priceId = PRICES.ESSENTIEL_YEAR;
-  if (offer === "ESSENTIEL" && billing === "month") priceId = PRICES.ESSENTIEL_MONTH;
-  if (offer === "CONFORT" && billing === "year") priceId = PRICES.CONFORT_YEAR;
-  if (offer === "CONFORT" && billing === "month") priceId = PRICES.CONFORT_MONTH;
-  if (offer === "SERENITE" && billing === "year") priceId = PRICES.SERENITE_YEAR;
-  if (offer === "SERENITE" && billing === "month") priceId = PRICES.SERENITE_MONTH;
+  if (offer === "ESSENTIEL" && billingType === "year") priceId = PRICES.ESSENTIEL_YEAR;
+  if (offer === "ESSENTIEL" && billingType === "month") priceId = PRICES.ESSENTIEL_MONTH;
+  if (offer === "CONFORT" && billingType === "year") priceId = PRICES.CONFORT_YEAR;
+  if (offer === "CONFORT" && billingType === "month") priceId = PRICES.CONFORT_MONTH;
+  if (offer === "SERENITE" && billingType === "year") priceId = PRICES.SERENITE_YEAR;
+  if (offer === "SERENITE" && billingType === "month") priceId = PRICES.SERENITE_MONTH;
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
-    mode: billing === "month" ? "subscription" : "payment",
+    mode: billingType === "month" ? "subscription" : "payment",
     customer_email: email,
     line_items: [
       {
