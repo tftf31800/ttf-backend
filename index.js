@@ -41,6 +41,10 @@ app.post("/api/checkout", async (req, res) => {
   if (offer === "SERENITE" && billingType === "year") priceId = PRICES.SERENITE_YEAR;
   if (offer === "SERENITE" && billingType === "month") priceId = PRICES.SERENITE_MONTH;
 
+  if (!priceId) {
+  return res.status(400).json({ error: "Prix invalide" });
+}
+
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: billingType === "month" ? "subscription" : "payment",
