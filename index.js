@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const stripe = new Stripe(process.env.STRIPE_SECRET);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // 🔥 TES PRIX STRIPE
 const PRICES = {
@@ -51,8 +51,8 @@ app.post("/api/checkout", async (req, res) => {
         quantity: 1,
       },
     ],
-    success_url: "https://TON-SITE.vercel.app/success",
-    cancel_url: "https://TON-SITE.vercel.app/cancel",
+    success_url: "https://souscrire.toutfeutoutflamme31.fr/success",
+    cancel_url: "https://souscrire.toutfeutoutflamme31.fr/cancel",
 
     metadata: {
       nom,
