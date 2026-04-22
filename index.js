@@ -119,22 +119,6 @@ app.post("/api/checkout", async (req, res) => {
       sepaAccepted,
     } = req.body;
 
-    app.get("/api/test-mail", async (_req, res) => {
-  try {
-    await transporter.sendMail({
-      from: process.env.MAIL_FROM,
-      to: process.env.MAIL_TO,
-      subject: "Test mail IONOS",
-      text: "Test OK depuis le backend Render.",
-    });
-
-    res.json({ ok: true, message: "Mail envoyé" });
-  } catch (error) {
-    console.error("Erreur test mail :", error);
-    res.status(500).json({ ok: false, error: error.message });
-  }
-});
-
     let priceId;
 
     if (offer === "ESSENTIEL" && billingType === "year") {
