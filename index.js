@@ -29,7 +29,7 @@ app.post("/api/checkout", async (req, res) => {
     adresse,
     appareil,
     offer,
-    billing,
+    billingType,
   } = req.body;
 
   let priceId;
