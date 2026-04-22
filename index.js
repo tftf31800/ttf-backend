@@ -16,7 +16,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const transporter = nodemailer.createTransport({
   host: "smtp.ionos.com",
   port: 587,
-  secure: true,
+  secure: false,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
