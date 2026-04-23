@@ -151,6 +151,9 @@ app.get("/api/test-mail", async (_req, res) => {
     res.status(500).json({ ok: false, error: error.message });
   }
 });
+app.get("/ping", (req, res) => {
+  res.status(200).send("OK");
+});
 
 app.post("/api/checkout", async (req, res) => {
   try {
