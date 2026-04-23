@@ -7,11 +7,52 @@ import nodemailer from "nodemailer";
 dotenv.config();
 
 const app = express();
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+app.post("/api/webhook", express.raw({ type: "application/json" }), async (req, res) => {
+  const sig = req.headers["stripe-signature"];
+
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err) {
+    console.error("Webhook signature error:", err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object;
+    const metadata = session.metadata || {};
+
+    await sendInternalSubscriptionEmail({
+      source: "Stripe",
+      offre: metadata.offre,
+      billingType: metadata.billingType,
+      nom: metadata.nom,
+      telephone: metadata.telephone,
+      email: metadata.email,
+      adresse: metadata.adresse,
+      appareil: metadata.appareil,
+      contractSigned: metadata.contractSigned,
+      cgvAccepted: metadata.cgvAccepted,
+      sepaAccepted: metadata.sepaAccepted,
+      stripeCustomerId: session.customer,
+      stripeSubscriptionId: session.subscription,
+      stripeSessionId: session.id,
+      paymentStatus: session.payment_status,
+    });
+  }
+
+  res.json({ received: true });
+});
 
 app.use(cors());
 app.use(express.json());
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -100,7 +141,7 @@ app.get("/api/test-mail", async (_req, res) => {
     await transporter.sendMail({
       from: process.env.MAIL_FROM,
       to: process.env.MAIL_TO,
-      subject: "Test mail IONOS",
+      subject: "Test mail ",
       text: "Test OK depuis le backend Render.",
     });
 
