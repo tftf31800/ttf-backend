@@ -14,7 +14,7 @@ app.use(express.json());
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.ionos.com",
+  host: "smtp.gmail.com",
   port: 465,
   secure: true,
   auth: {
@@ -23,7 +23,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-};
 async function sendInternalSubscriptionEmail({
   source,
   offre,
