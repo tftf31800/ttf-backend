@@ -152,7 +152,10 @@ app.get("/api/test-mail", async (_req, res) => {
   }
 });
 app.get("/ping", (req, res) => {
-  res.status(200).send("OK");
+  if (req.headers["user-agent"]?.includes("UptimeRobot")) {
+    return res.send("OK");
+  }
+  res.status(403).send("Forbidden");
 });
 
 app.post("/api/checkout", async (req, res) => {
