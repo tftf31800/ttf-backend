@@ -121,7 +121,7 @@ Date : ${new Date().toLocaleString("fr-FR")}
 }
 
 const PRICES = {
-  ESSENTIEL_YEAR: "price_1TPLbDJgCRDL7Cgv340RdjsM" #"price_1TOB7HJgCRDL7Cgv16QqokK5"#,
+  ESSENTIEL_YEAR: "price_1TPLbDJgCRDL7Cgv340RdjsM",
   ESSENTIEL_MONTH: "price_1TNSOgJgCRDL7Cgv4AEkyrX3",
   CONFORT_YEAR: "price_1TOB6HJgCRDL7CgvV114Q2kh",
   CONFORT_MONTH: "price_1TNSPlJgCRDL7Cgvf211mea2",
