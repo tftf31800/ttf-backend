@@ -175,6 +175,10 @@ app.post("/api/checkout", async (req, res) => {
 
     const priceId = priceMap[offer]?.[billingType];
 
+if (!priceId) {
+  return res.status(400).json({ error: "Prix invalide" });
+}
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types:
         billingType === "month" ? ["sepa_debit"] : ["card"],
