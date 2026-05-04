@@ -160,16 +160,16 @@ app.post("/api/checkout", async (req, res) => {
 
     const priceMap = {
       ESSENTIEL: {
-        year: "price_XXX",
-        month: "price_XXX",
+        year: "price_1TOB7HJgCRDL7Cgv16QqokK5",
+        month: "price_1TNSOgJgCRDL7Cgv4AEkyrX3",
       },
       CONFORT: {
-        year: "price_XXX",
-        month: "price_XXX",
+        year: "price_1TOB6HJgCRDL7CgvV114Q2kh",
+        month: "price_1TNSPlJgCRDL7Cgvf211mea2",
       },
       SERENITE: {
-        year: "price_XXX",
-        month: "price_XXX",
+        year: "price_1TOB5FJgCRDL7CgvH9Tmcb5f",
+        month: "price_1TNSRHJgCRDL7CgvRGVIqOS7",
       },
     };
 
